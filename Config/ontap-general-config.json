@@ -1,0 +1,25 @@
+{
+    "About": {
+      "Product": "NetApp Cluster Config (Basic)",
+      "ConfigVersion": "1.0"
+    },
+    "Cluster": {
+      "Autosupport": {
+        "IsEnabled": "True",
+        "Transport": "https",
+        "MailHost": "smtp.domain.com",
+        "SupportAddress": "autosupport@netapp.com",
+        "To": "storage_team@domain.com"
+      },
+      "NTP": {
+        "ServerName1": "ntpserver1.domain.com",
+        "ServerName2": "ntpserver2.domain.com"
+      }
+    }
+  }
+
+
+ 
+
+        
+
