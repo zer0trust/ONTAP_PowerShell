@@ -55,9 +55,9 @@ function Update-ONTAPSSLCertificates {
             <vserver>$($NewCert.Vserver)</vserver>
             </security-ssl-modify>
 "@
-        Write-Verbose -Message "Adding certificate <$($NewCert.CommonName)> for SVM <$($NewCert.Vserver)>..."
-        Invoke-NcSystemApi -VserverContext $($NewCert.Vserver) -Request $Request | Out-Null
-                if (Get-NcSecuritySSL -VserverContext $($NewCert.Vserver).ServerAuth -eq $true) {
+            Write-Verbose -Message "Adding certificate <$($NewCert.CommonName)> for SVM <$($NewCert.Vserver)>..."
+            Invoke-NcSystemApi -VserverContext $($NewCert.Vserver) -Request $Request | Out-Null
+                if ((Get-NcSecuritySSL -VserverContext $Certificate.Vserver).ServerAuth -eq $true) {
                     Write-Output -InputObject "New certificate added and Server Authentication re-enabled"
             } # if
         } #foreach
