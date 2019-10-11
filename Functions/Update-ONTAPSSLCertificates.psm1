@@ -32,9 +32,9 @@ function Update-ONTAPSSLCertificates {
     } # begin
     PROCESS {
         # Collect list of self-signed SVM SSL certificates that will be expiring within 30 days
-        $Certificates = Get-NcVserver | ?{$_.VserverType -eq "data"} | Get-NcSecurityCertificate | ?{$_.Type -eq "server" -and $_.CommonName -eq $_.Vserver -and $_.ExpirationDateDT -lt (Get-Date).AddDays(30)}
+        $Certificates = Get-NcVserver | ?{$_.VserverType -eq "data"} | Get-NcSecurityCertificate | ?{$_.Type -eq "server" -and $_.CommonName -eq $_.Vserver -and $_.ExpirationDateDT -lt (Get-Date).AddDays(3655)}
             if (!$Certificates) {
-                throw "No expiring certificates found"
+                throw "No expiring certificates found!"
             } # if 
         # Loop through list of identified certificates
         foreach ($Certificate in $Certificates) {
@@ -59,7 +59,10 @@ function Update-ONTAPSSLCertificates {
             Invoke-NcSystemApi -VserverContext $($NewCert.Vserver) -Request $Request | Out-Null
                 if ((Get-NcSecuritySSL -VserverContext $Certificate.Vserver).ServerAuth -eq $true) {
                     Write-Output -InputObject "New certificate added and Server Authentication re-enabled"
-            } # if
+                } # if
+                else {
+                    throw "SVM Server Authentication was not re-enabled successfully, please troubleshoot or enable manually" 
+                } # else 
         } #foreach
     } # process
 } # fuction
