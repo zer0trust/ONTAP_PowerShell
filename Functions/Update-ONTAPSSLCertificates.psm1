@@ -9,7 +9,7 @@ Version:
 .DESCRIPTION
 Replaces ONTAP SVM SSL certificates that have expired or are going to expire in 30 days or less.
 .PARAMETER Controller
-The cluster management LIF IP address or resolvable DNS name for the cluster to connect to.
+IP/DNS name of the cluster management LIF. 
 .EXAMPLE
 Update-ONTAPSSLCertificates -Controller lab-clst-01.lab.com
 #>
