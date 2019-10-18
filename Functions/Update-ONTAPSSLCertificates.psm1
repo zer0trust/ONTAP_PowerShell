@@ -1,15 +1,26 @@
 <#
 .NOTES
 File Name:  Update-ONTAPSSLCertificates.psm1
-.COMPONENT  
+<<<<<<< HEAD
+.COMPONENT
 -NetApp PowerShell Toolkit 9.6 (will likely work on older versions as well)
 .SYNOPSIS
-Version: 
+Version:
+=======
+.COMPONENT
+-NetApp PowerShell Toolkit 9.6 (will likely work on older versions as well)
+.SYNOPSIS
+Version:
+>>>>>>> 335c00cbf5a009efcc07ed48e37330205391f216
 1.0 - Initial release
 .DESCRIPTION
 Replaces ONTAP SVM SSL certificates that have expired or are going to expire in 30 days or less.
 .PARAMETER Controller
-IP/DNS name of the cluster management LIF. 
+<<<<<<< HEAD
+IP/DNS name of the cluster management LIF.
+=======
+IP/DNS name of the cluster management LIF.
+>>>>>>> 335c00cbf5a009efcc07ed48e37330205391f216
 .EXAMPLE
 Update-ONTAPSSLCertificates -Controller lab-clst-01.lab.com
 #>
@@ -20,22 +31,22 @@ function Update-ONTAPSSLCertificates {
     )
     BEGIN {
         if (-not (Get-Module DataONTAP)) {
-			Import-Module DataONTAP
-			if (-not (Get-Module DataONTAP)) {
-				throw "Unable to import DataONTAP module, please install it before running this function"
-			} # if
-		} # if
-        Connect-NcController $Controller
-            if (!$global:CurrentNcController) {
-                throw "Please connect to a NetApp controller before running this function"
+            Import-Module DataONTAP
+            if (-not (Get-Module DataONTAP)) {
+                throw "Unable to import DataONTAP module, please install it before running this function"
             } # if
+        } # if
+        Connect-NcController $Controller
+        if (!$global:CurrentNcController) {
+            throw "Please connect to a NetApp controller before running this function"
+        } # if
     } # begin
     PROCESS {
         # Collect list of self-signed SVM SSL certificates that will be expiring within 30 days
-        $Certificates = Get-NcVserver | ?{$_.VserverType -eq "data"} | Get-NcSecurityCertificate | ?{$_.Type -eq "server" -and $_.CommonName -eq $_.Vserver -and $_.ExpirationDateDT -lt (Get-Date).AddDays(3655)}
-            if (!$Certificates) {
-                throw "No expiring certificates found!"
-            } # if 
+        $Certificates = Get-NcVserver | ? { $_.VserverType -match "data|admin" } | Get-NcSecurityCertificate | ? { $_.Type -eq "server" -and $_.CommonName -eq $_.Vserver -and $_.ExpirationDateDT -lt (Get-Date).AddDays(30) }
+        if (!$Certificates) {
+            throw "No expiring certificates found!"
+        } # if
         # Loop through list of identified certificates
         foreach ($Certificate in $Certificates) {
             # Removes all identified SSL certificates from the system, confirming each one. Add -Confirm:$false to command to remove prompts
@@ -61,8 +72,8 @@ function Update-ONTAPSSLCertificates {
                     Write-Output -InputObject "New certificate added and Server Authentication re-enabled"
                 } # if
                 else {
-                    throw "SVM Server Authentication was not re-enabled successfully, please troubleshoot or enable manually" 
-                } # else 
+                    throw "SVM Server Authentication was not re-enabled successfully, please troubleshoot or enable manually"
+                } # else
         } #foreach
     } # process
 } # fuction
